@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Field from "./Field";
 import Button from "../components/Button";
+import { useAuth } from "../context/AuthContext";
 
 export default function AuthForm() {
   const [mode, setMode] = useState("login");
@@ -15,87 +17,22 @@ export default function AuthForm() {
   const confirmRef = useRef(null);
 
   const isLogin = mode === "login";
-
-  async function sendLoginRequest() {
-    const formData = {
-      email,
-      password,
-    };
-
-    try {
-      const response = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const jsonResponse = await response.json();
-        console.log("RESPONSE.MESSAGE:", jsonResponse.message);
-
-        throw new Error(jsonResponse.message);
-      }
-
-      const data = await response.json();
-      console.log("Logged in:", data);
-      // I need data.token
-      localStorage.setItem("token", data.token);
-
-      setErrors((prev) => ({ ...prev, form: "" }));
-    } catch (err) {
-      console.error("Error:", err.message);
-      setErrors((prev) => ({ ...prev, form: err.message }));
-    }
-  }
+  const router = useRouter();
+  const { login, signup } = useAuth();
 
   async function handleLogin(e) {
     e.preventDefault();
-    // TODO: store the auth token, then redirect to "/".
-
-    sendLoginRequest();
-
-    // The values you need are already in state:
-    console.log("login submit", { email, password });
-  }
-
-  async function sendSignupRequest() {
-    const formData = {
-      name,
-      email,
-      password,
-    };
-
     try {
-      const response = await fetch("http://localhost:5000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const jsonResponse = await response.json();
-        console.log("RESPONSE.MESSAGE:", jsonResponse.message);
-
-        throw new Error(jsonResponse.message);
-      }
-
-      const data = await response.json();
-      console.log("Signed up:", data);
-      setErrors((prev) => ({ ...prev, form: "" }));
+      await login(email, password);
+      setErrors({ confirm: "", form: "" });
+      router.push("/");
     } catch (err) {
-      console.error("Error:", err.message);
       setErrors((prev) => ({ ...prev, form: err.message }));
     }
   }
 
   async function handleSignup(e) {
     e.preventDefault();
-    // TODO: validate the fields (e.g. password === confirm),
-    // call your signup API, then log the user in / redirect to "/".
 
     if (password !== confirm) {
       setErrors((prev) => ({ ...prev, confirm: "Passwords do not match" }));
@@ -103,25 +40,25 @@ export default function AuthForm() {
       return;
     }
 
-    setErrors((prev) => ({ ...prev, confirm: "" }));
-
-    // make the post request
-    sendSignupRequest();
-
-    // The values you need are already in state:
-    console.log("signup submit", { name, email, password, confirm });
+    try {
+      await signup(name, email, password);
+      setErrors({ confirm: "", form: "" });
+      router.push("/");
+    } catch (err) {
+      setErrors((prev) => ({ ...prev, form: err.message }));
+    }
   }
 
   return (
-    <div className="w-full max-w-md neon-border bg-panel rounded-lg p-8">
+    <div className="w-full max-w-md bg-white/[0.02] backdrop-blur-2xl border border-white/[0.08] rounded-3xl p-8 sm:p-10 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)] z-10">
       <Link
         href="/"
-        className="block text-center text-primary neon-text font-bold tracking-[0.3em] mb-1 cursor-pointer"
+        className="block text-center text-white hover:text-white/80 text-2xl font-bold tracking-[0.2em] mb-1 cursor-pointer transition-colors"
       >
         DEVFORGE
       </Link>
 
-      <p className="text-center text-xs text-muted tracking-widest mb-8">
+      <p className="text-center text-xs text-white/40 tracking-widest mb-8">
         {"// access_terminal"}
       </p>
 
@@ -183,7 +120,7 @@ export default function AuthForm() {
           <p
             role="alert"
             aria-live="polite"
-            className="text-xs text-red-400 tracking-widest"
+            className="text-xs text-red-400 font-medium tracking-wide bg-red-500/10 border border-red-500/20 p-3 rounded-xl"
           >
             {"// "}
             {errors.form}
@@ -195,15 +132,15 @@ export default function AuthForm() {
         </Button>
       </form>
 
-      <p className="text-center text-xs text-muted mt-6">
+      <p className="text-center text-xs text-white/40 mt-6">
         {isLogin ? "No account yet? " : "Already wired in? "}
         <button
           type="button"
           onClick={() => {
             setMode(isLogin ? "signup" : "login");
-            setErrors({ confirm: "" });
+            setErrors({ confirm: "", form: "" });
           }}
-          className="text-primary hover:text-primary-strong underline underline-offset-4 cursor-pointer"
+          className="text-white hover:text-white/80 font-semibold underline underline-offset-4 cursor-pointer transition-colors"
         >
           {isLogin ? "Register" : "Log in"}
         </button>
@@ -211,7 +148,7 @@ export default function AuthForm() {
 
       <Link
         href="/"
-        className="block text-center text-xs text-muted hover:text-primary mt-4 cursor-pointer"
+        className="block text-center text-xs text-white/30 hover:text-white/60 mt-5 transition-colors cursor-pointer"
       >
         ← back to home
       </Link>

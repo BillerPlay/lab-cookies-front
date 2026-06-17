@@ -31,22 +31,38 @@ const variants = {
 };
 
 export default function Button({
-  variant = "primary",
-  size = "md",
+  children,
+  onClick,
+  type = "button",
   href,
   className = "",
-  type,
   ...props
 }) {
-  const classes = `${base} ${sizes[size] ?? sizes.md} ${
-    variants[variant] ?? variants.primary
-  } ${className}`;
+  const baseClass = `
+    inline-flex items-center justify-center gap-2 
+    px-6 py-3 rounded-xl font-semibold text-sm text-white
+    bg-gradient-to-br from-white/15 to-white/5
+    backdrop-blur-lg border border-white/20
+    shadow-[0_4px_15px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]
+    cursor-pointer select-none transition-all duration-300
+    hover:from-white/25 hover:to-white/10 hover:border-white/30 hover:scale-[1.01]
+    active:scale-[0.99]
+    focus:outline-none focus:ring-2 focus:ring-blue-500/50
+    disabled:cursor-not-allowed disabled:opacity-40
+    ${className}
+  `;
 
   if (href) {
     return (
-      <Link href={href} className={classes} {...props} />
+      <Link href={href} className={baseClass} {...props}>
+        {children}
+      </Link>
     );
   }
 
-  return <button type={type ?? "button"} className={classes} {...props} />;
+  return (
+    <button type={type} onClick={onClick} className={baseClass} {...props}>
+      {children}
+    </button>
+  );
 }

@@ -87,71 +87,83 @@ const members = [
 
 function TagChip({ children }) {
   return (
-    <span className="text-[10px] uppercase tracking-widest text-secondary border border-secondary/50 px-2 py-0.5 rounded-sm">
+    <span className="text-[10px] uppercase tracking-widest text-white/70 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-md backdrop-blur-sm">
       {children}
     </span>
   );
 }
 
-
-
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 text-foreground">
+    <div className="relative flex flex-col flex-1 bg-[#05060a] text-white/90 overflow-hidden min-h-screen">
+      
+      {/* ── ФОНОВЫЕ СВЕТЯЩИЕСЯ СФЕРЫ ДЛЯ ЭФФЕКТА СТЕКЛА ── */}
+      <div className="absolute top-[5%] left-[10%] w-96 h-96 bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[35%] right-[5%] w-80 h-80 bg-pink-600/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-[20%] left-[15%] w-96 h-96 bg-blue-600/10 rounded-full blur-[130px] pointer-events-none" />
+
       {/* ── Top nav ─────────────────────────────────────────────── */}
-      <header className="flex items-center justify-between px-6 sm:px-10 py-5 border-b border-panel-border">
-        <span className="glitch neon-text text-primary text-xl font-bold tracking-[0.3em]">
+      <header className="relative flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/[0.06] bg-white/[0.01] backdrop-blur-md z-10">
+        <span className="text-white text-xl font-bold tracking-[0.2em] transition-opacity hover:opacity-80 cursor-pointer">
           DEVFORGE
         </span>
-        <Button href="/auth" variant="outline" size="sm">
+        <Button href="/auth" variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5">
           &gt; access_terminal
         </Button>
       </header>
 
       {/* ── Hero ────────────────────────────────────────────────── */}
-      <section className="scanlines px-6 sm:px-10 py-20 sm:py-28 text-center border-b border-panel-border">
-        <p className="text-secondary text-xs uppercase tracking-[0.4em] mb-4">
+      <section className="relative px-6 sm:px-10 py-24 sm:py-32 text-center border-b border-white/[0.06] z-10">
+        <p className="text-white/40 text-xs uppercase tracking-[0.4em] mb-4">
           {"// dev grid online"}
         </p>
-        <h1 className="text-4xl sm:text-6xl font-bold text-primary max-w-3xl mx-auto leading-tight">
+        <h1 className="text-4xl sm:text-6xl font-extrabold text-white max-w-4xl mx-auto leading-[1.15] tracking-tight">
           Build in the dark.
           <br />
-          Ship at the speed of light.
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-white/50">
+            Ship at the speed of light.
+          </span>
         </h1>
-        <p className="mt-6 text-muted max-w-xl mx-auto">
+        <p className="mt-6 text-white/50 max-w-xl mx-auto text-sm sm:text-base leading-relaxed">
           DevForge is the underground community for builders, breakers, and
           dreamers. Browse projects, trade snippets, and jack in.
         </p>
-        <Button href="/auth" className="mt-10">
-          Log in →
-        </Button>
+        <div className="mt-10">
+          <Button href="/auth" className="shadow-lg shadow-white/5">
+            Log in →
+          </Button>
+        </div>
       </section>
 
       {/* ── Projects ────────────────────────────────────────────── */}
-      <section className="px-6 sm:px-10 py-16">
-        <h2 className="text-primary neon-text uppercase tracking-[0.3em] text-sm mb-8">
-          ## trending_repos
+      <section className="relative px-6 sm:px-10 py-20 z-10 max-w-7xl mx-auto w-full">
+        <h2 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 pl-1">
+          # trending_repos
         </h2>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((p) => (
             <article
               key={p.name}
-              className="bg-panel border border-panel-border rounded-md p-5 hover:border-primary transition-colors group"
+              className="bg-white/[0.02] backdrop-blur-xl border border-white/[0.06] rounded-2xl p-6 hover:bg-white/[0.04] hover:border-white/15 hover:scale-[1.01] transition-all duration-300 shadow-[0_10px_30px_rgba(0,0,0,0.2)] group flex flex-col justify-between"
             >
-              <h3 className="text-primary font-bold">
-                {p.name}
-              </h3>
-              <p className="text-muted text-sm mt-2 min-h-[2.5rem]">
-                {p.blurb}
-              </p>
-              <div className="flex flex-wrap gap-2 mt-4">
-                {p.tags.map((t) => (
-                  <TagChip key={t}>{t}</TagChip>
-                ))}
+              <div>
+                <h3 className="text-white font-semibold text-lg tracking-tight group-hover:text-blue-400 transition-colors">
+                  {p.name}
+                </h3>
+                <p className="text-white/50 text-sm mt-2.5 min-h-[2.5rem] leading-relaxed">
+                  {p.blurb}
+                </p>
               </div>
-              <div className="flex gap-5 mt-4 text-xs text-muted">
-                <span>★ {p.stars.toLocaleString()}</span>
-                <span>⑂ {p.forks}</span>
+              <div>
+                <div className="flex flex-wrap gap-1.5 mt-5">
+                  {p.tags.map((t) => (
+                    <TagChip key={t}>{t}</TagChip>
+                  ))}
+                </div>
+                <div className="flex gap-5 mt-5 pt-4 border-t border-white/[0.04] text-xs text-white/40">
+                  <span className="flex items-center gap-1">★ {p.stars.toLocaleString()}</span>
+                  <span className="flex items-center gap-1">⑂ {p.forks}</span>
+                </div>
               </div>
             </article>
           ))}
@@ -159,25 +171,25 @@ export default function Home() {
       </section>
 
       {/* ── Snippets ────────────────────────────────────────────── */}
-      <section className="px-6 sm:px-10 py-16 border-t border-panel-border">
-        <h2 className="text-primary neon-text uppercase tracking-[0.3em] text-sm mb-8">
-          ## snippet_vault
+      <section className="relative border-t border-white/[0.06] px-6 sm:px-10 py-20 z-10 max-w-7xl mx-auto w-full">
+        <h2 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 pl-1">
+          # snippet_vault
         </h2>
-        <div className="grid gap-5 lg:grid-cols-3">
+        <div className="grid gap-6 lg:grid-cols-3">
           {snippets.map((s) => (
             <div
               key={s.title}
-              className="bg-panel border border-panel-border rounded-md overflow-hidden"
+              className="bg-white/[0.01] backdrop-blur-xl border border-white/[0.06] rounded-2xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.2)]"
             >
-              <div className="flex items-center gap-2 px-4 py-2 border-b border-panel-border">
-                <span className="w-2 h-2 rounded-full bg-secondary" />
-                <span className="w-2 h-2 rounded-full bg-primary" />
-                <span className="w-2 h-2 rounded-full bg-accent" />
-                <span className="ml-2 text-xs text-muted">
+              <div className="flex items-center gap-1.5 px-4 py-3 bg-white/[0.02] border-b border-white/[0.06]">
+                <span className="w-2 h-2 rounded-full bg-white/20" />
+                <span className="w-2 h-2 rounded-full bg-white/10" />
+                <span className="w-2 h-2 rounded-full bg-white/5" />
+                <span className="ml-2 text-xs font-medium text-white/40">
                   {s.title}
                 </span>
               </div>
-              <pre className="p-4 text-xs text-accent/90 overflow-x-auto">
+              <pre className="p-5 text-xs text-blue-300/90 overflow-x-auto font-mono bg-black/20 leading-relaxed">
                 <code>{s.code}</code>
               </pre>
             </div>
@@ -186,19 +198,19 @@ export default function Home() {
       </section>
 
       {/* ── Online members ──────────────────────────────────────── */}
-      <section className="px-6 sm:px-10 py-16 border-t border-panel-border">
-        <h2 className="text-primary neon-text uppercase tracking-[0.3em] text-sm mb-8">
-          ## online_now
+      <section className="relative border-t border-white/[0.06] px-6 sm:px-10 py-20 z-10 max-w-7xl mx-auto w-full">
+        <h2 className="text-white/40 uppercase tracking-[0.2em] text-xs font-semibold mb-8 pl-1">
+          # online_now
         </h2>
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {members.map((m) => (
             <li
               key={m.handle}
-              className="flex items-center gap-3 bg-panel border border-panel-border rounded-md px-4 py-3"
+              className="flex items-center gap-3.5 bg-white/[0.02] backdrop-blur-lg border border-white/[0.06] rounded-xl px-4 py-3.5 shadow-sm hover:bg-white/[0.04] transition-colors duration-300"
             >
-              <span className="pulse-dot w-2.5 h-2.5 rounded-full bg-accent" />
-              <span className="text-primary">@{m.handle}</span>
-              <span className="ml-auto text-[10px] uppercase tracking-widest text-muted">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+              <span className="text-white/80 font-medium text-sm">@{m.handle}</span>
+              <span className="ml-auto text-[10px] uppercase tracking-widest text-white/30 bg-white/5 px-2 py-0.5 rounded-md">
                 {m.role}
               </span>
             </li>
@@ -207,8 +219,8 @@ export default function Home() {
       </section>
 
       {/* ── Footer ──────────────────────────────────────────────── */}
-      <footer className="mt-auto px-6 sm:px-10 py-8 border-t border-primary/30 text-center text-xs text-muted">
-        <span className="text-primary neon-text tracking-[0.3em]">DEVFORGE</span>{" "}
+      <footer className="relative mt-auto px-6 sm:px-10 py-10 border-t border-white/[0.06] bg-white/[0.01] text-center text-xs text-white/30 z-10">
+        <span className="text-white/50 tracking-[0.2em] font-semibold">DEVFORGE</span>{" "}
         {"// © 2099 — all signals encrypted."}
       </footer>
     </div>
