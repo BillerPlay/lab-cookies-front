@@ -1,4 +1,5 @@
 import Button from "./components/Button";
+import Navbar from "./components/Navbar";
 
 // ── Placeholder content (static — no fetching) ─────────────────────────
 const projects = [
@@ -103,14 +104,7 @@ export default function Home() {
       <div className="absolute bottom-[20%] left-[15%] w-96 h-96 bg-blue-600/10 rounded-full blur-[130px] pointer-events-none" />
 
       {/* ── Top nav ─────────────────────────────────────────────── */}
-      <header className="relative flex items-center justify-between px-6 sm:px-10 py-5 border-b border-white/[0.06] bg-white/[0.01] backdrop-blur-md z-10">
-        <span className="text-white text-xl font-bold tracking-[0.2em] transition-opacity hover:opacity-80 cursor-pointer">
-          DEVFORGE
-        </span>
-        <Button href="/auth" variant="outline" size="sm" className="border-white/20 text-white hover:bg-white/5">
-          &gt; access_terminal
-        </Button>
-      </header>
+      <Navbar />
 
       {/* ── Hero ────────────────────────────────────────────────── */}
       <section className="relative px-6 sm:px-10 py-24 sm:py-32 text-center border-b border-white/[0.06] z-10">
